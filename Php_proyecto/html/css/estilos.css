@@ -1,0 +1,183 @@
+.dropdown-menu a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown:hover{
+  color: grey;
+}
+
+.dropdown-menu a:hover {
+    background-color: #5555;
+    color: black;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+
+/* LOGIN */
+
+.login{
+  background-color: red;
+  background-image: url("../img/fondo.jpg") !important;
+}
+.container-login{
+    margin: 0;
+    padding: 10px;
+    width: 350px;
+    background-color: rgba(255,255,255,.87);
+    border-radius: 4px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: #333;
+}
+.container-login label{
+    color: #333;
+}
+
+
+/* FORMULARIO */
+
+.encabezado{
+  padding-top: 1rem;
+  background-color: orange;
+}
+
+.caja_titulo{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.titulo{
+  color: black;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 3rem;
+}
+
+.boton{
+  background-color: orange;
+}
+
+.boton_error{
+  color:white;
+  background-color: rgb(255, 96, 96)
+}
+
+.boton:hover{
+  background-color: orange;
+}
+
+.hipervinculo a:link {
+  color: orange;
+}
+.hipervinculo a:visited {
+  color: orange;
+}
+.hipervinculo a:hover {
+  color: white;
+  text-decoration: none;
+}
+.hipervinculo a:active {
+  color: orange;
+}
+
+.encabezado_tabla{
+  background-color: orange;
+}
+
+.boton_a{
+  background-color: white;
+}
+
+.titulo-listar{
+  color: black;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+#icon{
+  color:orange;
+  font-size: 15px;
+  margin-left: 5px;
+}
+
+.iconos{
+  font-size: 20px;
+  color:black !important;
+}
+
+.iconos_nav{
+  color:white !important;
+  font-size: 20px;
+}
+
+.fa{
+   font-size: 20px;
+  color:green;
+}
+
+.disp td{
+  font-weight: bold !important;
+}
+
+.img_modal{
+  height: 150px;
+  width: auto;
+}
+
+.img_logo{
+  height: 100px;
+  width: 100px;
+}
+
+.img_index{
+  height: 300px;
+  width: 300px;
+}
+
+.img_titulo{
+  height: 30px;
+  width: auto;
+}
+
+.page-link{
+  background-color: orange;
+}
+
+.tablita{
+  border-collapse: separate !important;
+}
+
+.pagination .page-item.active .page-link:hover {
+    background-color: orange !important;
+}
+
+.page-item.active .page-link {
+  color:black !important;
+  background-color: orange !important;
+}
+
+.form-control:focus {
+  border-color:orange !important;
+  box-shadow: 0 0 0 0.0rem rgba(0,123,255,.25) !important;
+}
+
+.contenedor{
+  height: 100vh !important;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("../img/bg-masthead.jpg");
+}
+
+.botonExcel{
+  color:black;
+}
+
+

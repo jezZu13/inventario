@@ -1,0 +1,80 @@
+<?php
+    require('conexion.php');
+
+    //Comprobación de Datos y Recogida
+    if(isset($_POST["apertura"])){
+        if(isset($_POST["familia"])){
+            if(isset($_POST["productos"])){
+                if(empty($_POST["descripcion"])){
+                      $descripcion=null;  
+                }
+                if(isset($_POST["dispositivos"])){
+
+                    if (isset($_POST["estado"])) {
+                        
+                        
+                        $apertura=$_POST["apertura"];
+                        $sala=$_POST["ubicacion"];
+                        $familia=$_POST["familia"];
+                        $dispositivo=$_POST["dispositivos"];
+                        $producto=$_POST["productos"];
+                        $descripcion=$_POST["descripcion"];
+                        $estado=$_POST["estado"];
+                        $fecha_cambio=$_POST["cambia_ubicacion"];
+
+
+
+
+                        //HAY QUE ENCONTRAR LA SALA DONDE ESTÁ, ACTUALIZAR LA UBICACIÓN E INSERTAR LA NUEVA
+                        
+                        /*//ENCONTRAR SALA ANTERIOR
+                        $sql="SELECT `id_sala` from `ubicacion_dispositivo` where `id_disp`='$dispositivo' AND `fecha_salida_disp_sala='NULL'`;";
+                        $id_sala=mysqli_query($enlace,$sql);
+                        $id_sala=mysqli_query($enlace,$sql);
+                        $id_sala=mysqli_fetch_assoc($estado_anterior);
+                        $id_sala=$id_sala["id_sala"];
+                        echo $sql;*/
+                        //ACTUALIZAMOS
+                        $sql="UPDATE `ubicacion_dispositivo` set `fecha_salida_disp_sala`='$apertura' where `ubicacion_dispositivo`.`id_disp`='$dispositivo' and `ubicacion_dispositivo`.`fecha_salida_disp_sala` is NULL; ";
+                       $update=mysqli_query($enlace,$sql);
+                       echo $sql;
+                        //INSERTAMOS LA NUEVA UBICACIÓN DEL DISPOSITIVO
+                        $query_estado_disp="INSERT INTO `ubicacion_dispositivo`(`id_disp`, `id_sala`,`fecha_entrada_disp_sala`) values ('$dispositivo', '$sala','$fecha_cambio');";
+                        
+                        $result2=mysqli_query($enlace,$query_estado_disp) or die (header("Location: alta_incidencias.1.php?alta=1"));
+                        
+                        //BUSCAR EL ESTADO EN EL QUE ESTÁ, ACTUALIZARLO E INSERTAR EL NUEVO ESTADO
+                            
+                        /*//BUSCAR
+                            $sql="SELECT `id_estado` from `estado_dispositivo` where `id_disp`='$dispositivo';";
+                            $estado_anterior=mysqli_query($enlace,$sql);
+                            $estado_anterior=mysqli_fetch_assoc($estado_anterior);
+                            $estado_anterior=$estado_anterior["id_estado"];
+                            echo "<br>".$estado_anterior."<br>";*/
+                        //ACTUALIZAR
+                            $sql="UPDATE `estado_dispositivo` set `fecha_fin_est_disp`='$apertura' where `estado_dispositivo`.`id_disp`=$dispositivo AND `estado_dispositivo`.`fecha_fin_est_disp` is NULL";
+                          $result=mysqli_query($enlace,$sql);
+                          echo $sql;
+                        //INSERTAR
+                        $sql="INSERT INTO `estado_dispositivo`(`id_disp`, `id_estado`, `fecha_inicio_est_disp`) VALUES ('$dispositivo','$estado','$apertura');";
+                        echo $sql;
+                        $result1=mysqli_query($enlace,$sql) or die (header("Location: alta_incidencias.1.php?alta=2"));
+                        
+                        //CREAR LA NUEVA INCIDENCIA
+                        if($descripcion==NULL){
+                            $descripcion=' ';
+                        }
+                        $query_inci="INSERT INTO `incidencia` (`fecha_apertura_inc`,`descripcion_inc`,`id_disp`) VALUES ('$apertura','$descripcion','$dispositivo');";
+                        echo $query_inci;
+                        $result1=mysqli_query($enlace,$query_inci) or die (header("Location: alta_incidencias.1.php?alta=3"));
+                       
+                        
+                        
+                        header("Location: alta_incidencias.1.php?alta=4");
+                    }
+                }
+            }
+        }
+    }
+   
+?>

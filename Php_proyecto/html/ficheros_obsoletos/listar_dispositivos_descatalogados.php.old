@@ -1,0 +1,108 @@
+<?php include('header.php'); ?>
+	<h1>Dispositivos dados de baja</h1>
+	<label for="">En este listado se muestran aquellos dispositivos que fueron dados de baja, es decir, actualmente ya no se encuentran en el centro puesto que fueron tirados a la basura</label>
+	<?php
+		
+		require("conexion.php");
+
+		$query="SELECT dispositivo.*, producto.nombre_prod, pedido.id_ped, pedido.codigo_ped, origen_equipo.nombre_ori_eq, estado_dispositivo.id_estado, estado.nombre_estado, estado_dispositivo.fecha_fin_est_disp, ubicacion_dispositivo.id_sala, sala.nombre_sala, producto.id_marca, marca.id_marca, marca.nombre_marca, producto.id_familia_prod, familia_producto.id_familia_prod, familia_producto.nombre_familia_prod FROM dispositivo, producto, pedido, origen_equipo, estado_dispositivo, estado, ubicacion_dispositivo, sala, marca, familia_producto WHERE (dispositivo.id_producto=producto.id_prod) && (dispositivo.id_ped=pedido.id_ped) && (dispositivo.id_ori_eq=origen_equipo.id_ori_eq) && (estado_dispositivo.id_disp=dispositivo.id_disp) && (estado_dispositivo.id_estado=estado.id_estado) && (estado_dispositivo.fecha_fin_est_disp is NULL) && (ubicacion_dispositivo.id_disp=dispositivo.id_disp) && (ubicacion_dispositivo.fecha_salida_disp_sala is NULL)&&(ubicacion_dispositivo.id_sala=sala.id_sala)&&(fecha_baja_disp is NOT NULL) && (producto.id_familia_prod=familia_producto.id_familia_prod) && (producto.id_marca=marca.id_marca) ORDER BY producto.nombre_prod;";
+
+		$result=mysqli_query($enlace,$query) 
+			or die("Error");
+		
+			echo "<table border='1' class='table text-center'>"; 
+			
+			echo "<tr>";
+			echo "<th>Identificador</th>";
+			echo "<th>Serial Number</th>";
+			echo "<th>Producto</th>";
+			echo "<th>Tipo de producto</th>";
+			echo "<th>Marca</th>";
+			echo "<th>Fecha alta</th>";
+			echo "<th>Fecha de baja</th>";
+			echo "<th>MAC</th>";
+			echo "<th>Observaciones</th>";
+			echo "<th>Pedido</th>";
+			echo "<th>Origen</th>";
+			echo "<th>Estado actual</th>";
+			echo "<th>Sala actual</th>";
+			echo "</tr>";
+
+		while($row=mysqli_fetch_array($result,MYSQLI_ASSOC) ){
+			echo "<tr>";
+
+				//IDENTIFICADOR:
+				if(($row['identificador_disp']==NULL)||($row['identificador_disp']=="")){
+					echo "<td> <label style='color:red;'>Sin asignar</label> </td>";
+				}
+				else{
+					echo "<td>". $row['identificador_disp'] ."</td>";
+				}
+				
+				//SERIAL NUMBER:
+				if(($row['sn_disp']==NULL)||($row['sn_disp']=="")){
+					echo "<td> <label style='color:red;'>Sin definir</label> </td>";
+				}
+				else{
+					echo "<td>". $row['sn_disp'] ."</td>";
+				}
+				
+				//PRODUCTO
+				echo "<td>". $row['nombre_prod'] ."</td>";
+
+				//Familia producto
+				echo "<td>". $row['nombre_familia_prod'] ."</td>";
+
+				//MARCA
+				echo "<td>". $row['nombre_marca'] ."</td>";
+				
+				//FECHA ALTA:
+				if(($row['fecha_alta_disp']==NULL)||($row['fecha_alta_disp']=="0000-00-00")){
+					echo "<td> <label style='color:red;'>Desconocida</label> </td>";
+				}
+				else{
+					echo "<td>". $row['fecha_alta_disp'] ."</td>";
+				}
+
+				//FECHA BAJA:
+				echo "<td>". $row['fecha_baja_disp'] ."</td>";
+								
+				//MAC:
+				if(($row['MAC_disp']==NULL)||($row['MAC_disp']=="")){
+					echo "<td> <label style='color:red;'></label> </td>";
+				}
+				else{
+					echo "<td>". $row['MAC_disp'] ."</td>";
+				}
+				
+				//OBSERVACIONES
+				echo "<td>". $row['observaciones_disp'] ."</td>";
+
+				//PEDIDO:
+				if($row['codigo_ped']=="Desconocido"){
+					echo "<td></td>"; //Si el pedido es "desconocido", pintamos vacio.
+				}
+				else{
+					echo "<td>". $row['codigo_ped'] ."</td>";
+				}
+
+				//ORIGEN
+				echo "<td>". $row['nombre_ori_eq'] ."</td>";
+
+				//ESTADO ACTUAL
+				echo "<td>". $row['nombre_estado'] ."</td>";
+
+				//SALA ACTUAL
+				echo "<td>". $row['nombre_sala'] ."</td>";
+
+			echo "</tr>";
+			}
+
+			echo "</table>";
+
+		mysqli_close($enlace);
+
+	?>
+
+</body>
+</html>

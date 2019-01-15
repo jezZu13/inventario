@@ -1,0 +1,8 @@
+-La web está desarrollada con PHP 7.2.4 y MySQL 5.7.21
+
+-La versión de WAMP utilizada es:
+wampserver3.1.3_x64.exe
+
+-La versión de Java utilizada es jdk1.8.0_144 (la empleada en clase durante todo el curso).
+
+-El mysql-connetor utilizado es la versión 5.1.4

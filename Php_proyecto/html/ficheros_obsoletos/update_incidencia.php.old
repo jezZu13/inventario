@@ -1,0 +1,55 @@
+<?php
+    //RECOGEMOS LOS DATOS   
+    
+    if(isset($_POST["serial"])){
+        if(isset($_POST["cierre"])){
+            if(isset($_POST["solucion"])){
+                $fecha_cierre=$_POST["cierre"];
+                $serial=$_POST["serial"];
+                if(empty($_POST["solucion"])){
+                    $solucion=' ';
+                }else{
+                    $solucion=$_POST["solucion"];
+                }
+                
+                $estado_nuevo=$_POST["estado_nuevo"];
+                $ubicacion_nueva=$_POST["ubicacion"];
+                $fecha_alta=$_POST["alta"];
+
+                require("conexion.php");
+                //ENCONTRAR EL ID DEL DISPOSITIVO DESDE EL NÚMERO DE SERIE
+                    $sql="SELECT `id_disp` from `dispositivo` where `sn_disp`='$serial';";
+                    $result=mysqli_query($enlace,$sql);
+                    $result=mysqli_fetch_assoc($result) or die (header("Location:cerrar_incidencia?error=1"));
+                    $id_disp=$result["id_disp"];
+                //ENCONTRAR EL ESTADO_DISPOSITIVO DESDE EL ID + FECHA ALTA --> FECHA SALIDA ESTARÁ NULL
+                    $sql="SELECT `id_estado` from `estado_dispositivo` where `id_disp`='$id_disp' and `fecha_inicio_est_disp`='$fecha_alta' and `fecha_fin_est_disp` is null";
+                    $result=mysqli_query($enlace,$sql)or die (header("Location:cerrar_incidencia?error=2"));
+                    $result=mysqli_fetch_assoc($result);
+                    $estado_anterior=$result["id_estado"];
+                //ENCONTRAR LA UBICACION_DISPOSITIVO DESDE ID + FECHA ALTA --> FECHA SALIDA ESTARÁ NULL
+                    $sql="SELECT `id_sala` from `ubicacion_dispositivo` where `id_disp`='$id_disp' and `fecha_entrada_disp_sala`='$fecha_alta' and `fecha_salida_disp_sala` is null";
+                    $result=mysqli_query($enlace,$sql)or die (header("Location:cerrar_incidencia?error=3"));
+                    $result=mysqli_fetch_assoc($result);
+                    $id_sala=$result["id_sala"];
+                //ACTUALIZAR EL ESTADO_DISPOSITIVO ACTUAL E INSERTAR EL NUEVO ESTADO
+                    $sql="UPDATE `estado_dispositivo` set `fecha_fin_est_disp`='$fecha_cierre' where `id_disp`='$id_disp' AND `fecha_fin_est_disp` is null";
+                    $result=mysqli_query($enlace,$sql);
+                    $sql="INSERT INTO `estado_dispositivo`(`id_disp`, `id_estado`, `fecha_inicio_est_disp`) VALUES ('$id_disp','$estado_nuevo','$fecha_cierre');";
+                    $result1=mysqli_query($enlace,$sql) or die (header("Location:cerrar_incidencia?error=4"));
+                //ACTUALIZAR LA UBICACION_DISPOSITIVO ACTUAL E INSERTAR LA NUEVA UBICACION
+                    $sql="UPDATE `ubicacion_dispositivo` set `fecha_salida_disp_sala`='$fecha_cierre' where `id_disp`='$id_disp' and `fecha_salida_disp_sala`is null ";
+                    $update=mysqli_query($enlace,$sql);
+                    $query_estado_disp="INSERT INTO `ubicacion_dispositivo`(`id_disp`, `id_sala`,`fecha_entrada_disp_sala`) values ('$id_disp', '$ubicacion_nueva','$fecha_cierre');";     
+                    $result2=mysqli_query($enlace,$query_estado_disp) or die (header("Location:cerrar_incidencia?error=5"));
+                //CERRAR INCIDENCIA
+                    $sql="UPDATE `incidencia` set `fecha_cierre_inc`='$fecha_cierre', `solucion_inc`='$solucion' ";
+                    $result=mysqli_query($enlace,$sql) or die(header("Location:cerrar_incidencia?error=6"));
+                    header("Location:void.php?comprobar=correcto");
+            }
+            //header("Location:mantenimiento_incidencias.php?error=6");
+        }
+        //header("Location:mantenimiento_incidencias.php?error=7");
+    }
+    //header("Location:mantenimiento_incidencias.php?error=8");
+?>
